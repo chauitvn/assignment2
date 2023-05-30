@@ -1,6 +1,3 @@
-import argparse
-import json
-
 import torch
 from transformers import GenerationConfig, AutoModelForCausalLM, AutoTokenizer, AutoConfig
 

@@ -1,9 +1,5 @@
 from prompt import Prompter
 from datasets import load_dataset
-import random
-
-from typing import Union
-
 
 
 def create_datasets(data_path, size_valid_set, tokenizer, max_length, seed):

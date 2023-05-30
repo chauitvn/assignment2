@@ -314,6 +314,7 @@ if __name__ == "__main__":
     num_epochs = 10
     batch_size = 4
     gradient_accumulation_steps = 16
+    mixed_precision_dtype = torch.bfloat16
 
     learning_rate = 3e-4
     lr_scheduler_type = 'cosine'
@@ -353,6 +354,7 @@ if __name__ == "__main__":
         tokenizer=tokenizer,
         output_dir= OUTPUT_DIR,
         is_ddp_training = True if distributed_strategy == "ddp" else False,
+        mixed_precision_dtype =  mixed_precision_dtype,
         gradient_accumulation_steps = gradient_accumulation_steps,
     )
     
