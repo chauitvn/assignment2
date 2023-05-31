@@ -55,7 +55,12 @@ class Trainer:
         
         self.gpu_id = gpu_id
         # move model to device
-        self.model = model.to(f"cuda:{self.gpu_id}") 
+        self.model = model.to(f"cuda:{self.gpu_id}")
+        # Use DataParallel if multiple GPUs are available
+        if torch.cuda.device_count() > 1:
+            print("Using", torch.cuda.device_count(), "GPUs for training.")
+            self.model = torch.nn.DataParallel(self.model)
+
 
         self.gradient_accumulation_steps = gradient_accumulation_steps
 
