@@ -254,13 +254,14 @@ class Trainer:
 def load_tokenizer_from_pretrained_model(model_path):
     config = AutoConfig.from_pretrained(model_path)
     architecture = config.architectures[0]
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
+    tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)
     if _is_master_process():
         print('Completed to load config & tokenizer')
 
     if "Llama" in architecture:
         if _is_master_process():
             print("Setting EOS, BOS, UNK, and PAD tokens for LLama tokenizer")
+
         tokenizer.add_special_tokens(
             {
                 "eos_token": "</s>",
