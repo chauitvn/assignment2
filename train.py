@@ -44,8 +44,6 @@ class Trainer:
             batch_size: Training batch size.
             gpu_id: GPU ID for training.
         """
-        
-
         self.num_epochs = num_epochs
         self.max_length = max_length
         self.batch_size = batch_size
@@ -67,7 +65,7 @@ class Trainer:
         # Setup mixed precision training context. If 'mixed_precision_dtype' is None, use 'nullcontext', 
         # otherwise use 'torch.amp.autocast' with the specified dtype.
         self.mixed_precision_dtype = mixed_precision_dtype
-        self.ctx = None #nullcontext() if mixed_precision_dtype == None else torch.amp.autocast(device_type='cuda', dtype = mixed_precision_dtype)
+        self.ctx = None
         self.gradscaler = None
 
         # set mixed precision context
@@ -88,7 +86,7 @@ class Trainer:
         # You would need to pass the model and specify the device IDs
         # and output device for the data parallelism.
         # Set the cuda device
-        self.model = DDP(self.model, device_ids=[self.local_rank], output_device=self.local_rank) 
+        self.model = DDP(self.model, device_ids=[self.gpu_id], output_device=self.gpu_id) 
 
         
     def _run_batch(self, batch):
@@ -337,9 +335,10 @@ if __name__ == "__main__":
         # Initialize the process group for distributed data parallelism with nccl backend.
         # After that, you should set the 'local_rank' from the environment variable 'LOCAL_RANK'.
         # Initialize the process group ### YOUR CODE HERE ###
+        torch.distributed.init_process_group(backend=backend)
+        # get the DDP local rank
         local_rank = int(os.environ['LOCAL_RANK'])
         torch.cuda.set_device(local_rank)
-        torch.distributed.init_process_group(backend=backend)
     else:
         os.environ['RANK'] = '0'
         local_rank = 0
